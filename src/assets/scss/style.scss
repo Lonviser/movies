@@ -1,8 +1,18 @@
-/* Default Styles */
-*,
-*::after,
-*::before {
-    margin: 0;
-    box-sizing: border-box;
+@import "general/normilize";
+@import "general/conatiner";
+@import "general/variables";
+//blocks
+
+@import "blocks/header";
+@import "blocks/catalog";
+@import "blocks/nav";
+@import "blocks/movie";
+
+
+*{
+    font-family: 'Montserrat', sans-serif;
 }
 
+main{
+    margin-top: 20px;
+}

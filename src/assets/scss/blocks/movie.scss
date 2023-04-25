@@ -1,0 +1,11 @@
+.movie{
+    &__content{
+        display: flex;
+        gap: 20px;
+    }
+    &__txt{
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+    }
+}

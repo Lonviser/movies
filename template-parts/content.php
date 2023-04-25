@@ -29,7 +29,6 @@
 		<?php endif; ?>
 	</header><!-- .entry-header -->
 
-	<?php movies_post_thumbnail(); ?>
 
 	<div class="entry-content">
 		<?php
@@ -57,7 +56,4 @@
 		?>
 	</div><!-- .entry-content -->
 
-	<footer class="entry-footer">
-		<?php movies_entry_footer(); ?>
-	</footer><!-- .entry-footer -->
 </article><!-- #post-<?php the_ID(); ?> -->
