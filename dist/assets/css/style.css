@@ -375,6 +375,12 @@ html {
     height: 100%;
 }
 
+@media (max-width: 1023px) {
+    .header__title {
+        font-size: 24px;
+    }
+}
+
 .catalog__items {
     margin-bottom: 20px;
     display: flex;
@@ -423,6 +429,18 @@ html {
     background-color: #2d2d2d;
 }
 
+@media (max-width: 1023px) {
+    .catalog__items {
+        grid-template-columns: 1fr 1fr;
+    }
+}
+
+@media (max-width: 700px) {
+    .catalog__items {
+        grid-template-columns: 1fr;
+    }
+}
+
 .nav-next a, .nav-links a {
     text-decoration: none;
     color: white;
@@ -458,6 +476,12 @@ html {
     display: flex;
     justify-content: center;
     align-items: center;
+}
+
+@media (max-width: 1023px) {
+    .footer__title {
+        font-size: 24px;
+    }
 }
 
 * {

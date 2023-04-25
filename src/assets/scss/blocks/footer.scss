@@ -12,3 +12,11 @@
         align-items: center;
     }
 }
+
+@media(max-width:1023px){
+    .footer{
+        &__title{
+            font-size: 24px;
+        }
+    }
+}
