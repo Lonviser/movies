@@ -10,7 +10,9 @@
 get_header();
 ?>
 
-	<main id="primary" class="site-main">
+    <div class="wrapper">
+        <div class="content">
+        <main id="primary" class="site-main">
         <div class="container">
 
             <div class="movie__content">
@@ -42,6 +44,10 @@ get_header();
            
         </div>
 	</main><!-- #main -->
+        </div>
+        <footer class="footer">
+         <?php get_footer(); ?>
+        </footer>
+    </div>
+	
 
-<?php
-get_footer();

@@ -29,7 +29,7 @@
 		<div class="header__content">
 			<a class="header__link" href="/">
 				<h1 class="header__title">
-					Колекция фильмов
+					Коллекция фильмов
 				</h1>
 			</a>
 		</div>

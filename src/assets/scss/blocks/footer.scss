@@ -1,0 +1,14 @@
+.footer{
+    width: 100%;
+    background-color: $second-color;
+    &__title{
+        margin: 0;
+        margin: 0 auto;
+        color: $main-color;
+    }
+    .container{
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+}

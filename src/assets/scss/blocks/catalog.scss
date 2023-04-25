@@ -11,14 +11,36 @@
             display: flex;
             flex-direction: column;
         }
+        &-card{
+            max-width: 300px;
+        }
+        &-title{
+            font-weight: bold;
+            margin-top: 10px;
+            margin-bottom: 10px;
+        }
+        &-description{
+            margin-top: 10px;
+            margin-bottom: 10px;
+            p{
+                margin: 0;
+            }
+        }
     }
+    &__items{
+        display: grid;
+        justify-items: center;
+        grid-template-columns: 1fr 1fr 1fr;
+    }
+
     &__button{
         margin-top: 10px;
         padding:5px;
         border-radius:20px;
         display: block;
         text-decoration: none;
-        color:$main-color;
+        color: white;
         background-color: $second-color; 
     }
+
 }

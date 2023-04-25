@@ -11,7 +11,7 @@
 
 	<footer class="footer">
 		<div class="container">
-			<h3>Тестовое задание для Инолта</h3>
+			<h2 class="footer__title">Тестовое задание для Инолта</h2>
 		</div>
 	</footer>
 </div>

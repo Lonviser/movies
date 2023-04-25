@@ -1,7 +1,7 @@
 .header{
     width: 100%;
     height: 50px;
-    background-color:beige;
+    background-color:$second-color;
     &__title{
         text-align: center;
         margin: 0px;
@@ -9,7 +9,7 @@
     }
     &__link{
         text-decoration: none;
-        color:black;
+        color: $main-color;
     }
     &__content{
         display: flex;
