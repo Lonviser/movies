@@ -533,6 +533,7 @@ div#response {
     display: grid;
     grid-template-columns: 1fr 1fr 1fr;
     justify-items: center;
+    gap: 20px;
 }
 
 @media (max-width: 1023px) {

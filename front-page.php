@@ -40,7 +40,7 @@ get_header();
                         <input type="radio" name="sort_by" value="price_desc" id="sort-by-price-desc">
                         <label for="sort-by-price-desc">Сортировать по цене (убывание)</label>
                     </div>
-    
+
                     <button>Применить</button>
                     <input type="hidden" name="action" value="myfilter">
                 </form>
@@ -79,7 +79,6 @@ get_header();
                                     if ($termini && !is_wp_error($termini)) {
                                         $termini_massiv = array();
                                         foreach ($termini as $termin) {
-                                            // добавление элемента в массив
                                             $termini_massiv[] = '<a href="' . get_term_link($termin) . '" title="Перейти к ' . esc_attr($termin->name) . '">' . $termin->name . '</a>';
                                         }
                                         $termini_a_hrefs = join(", ", $termini_massiv);

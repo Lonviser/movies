@@ -347,16 +347,15 @@ function misha_filter_function(){
 	 break;
 	 }
 
-// Check if genre filter is set
-if( isset( $_POST['genres'] ) && !empty( $_POST['genres'] ) ) {
-	$args['tax_query'] = array(
-		array(
-			'taxonomy' => 'genre',
-			'terms'    => $_POST['genres'],
-		),
-	);
-}
- 
+	 if( isset( $_POST['genres'] ) && $_POST['genres'] == 'on' && isset( $_POST['taxonomy_term'] ) ) {
+		$args['tax_query'] = array(
+			array(
+				'taxonomy' => 'genres',
+				'field' => 'slug',
+				'terms' => sanitize_text_field( $_POST['taxonomy_term'] )
+			)
+		);
+	}
 
 $query = new WP_Query( $args );
 	
@@ -393,7 +392,7 @@ if( $query->have_posts() ) :
         echo '<h3 class="catalog__item-title">Стоимость:</h3>';
         echo '<span>';
         the_field('stoimost');
-        echo 'рублей</span>';
+        echo ' рублей</span>';
         echo '</div>';
     endwhile;
     wp_reset_postdata();
