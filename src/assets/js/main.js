@@ -1,3 +1,18 @@
-//= components/script.js
-//= components/script2.js
-//= components/script3.js
+jQuery(function($){
+	$('#filter').submit(function(){
+		var filter = $('#filter');
+		$.ajax({
+			url:filter.attr('action'),
+			data:filter.serialize(), // form data
+			type:filter.attr('method'), // POST
+			beforeSend:function(xhr){
+				filter.find('button').text('Обработка...'); // changing the button label
+			},
+			success:function(data){
+				filter.find('button').text('Применить фильтр'); // changing the button label back
+				$('#response').html(data); // insert data
+			}
+		});
+		return false;
+	});
+});

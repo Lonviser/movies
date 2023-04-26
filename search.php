@@ -10,8 +10,12 @@
 get_header();
 ?>
 
-	<main id="primary" class="site-main">
+<div class="wrapper">
+        <div class="content">
+        <main id="primary" class="site-main">
+        <div class="container">
 
+           
 		<?php if ( have_posts() ) : ?>
 
 			<header class="page-header">
@@ -30,7 +34,6 @@ get_header();
 
 				/**
 				 * Run the loop for the search to output the results.
-				 * If you want to overload this in a child theme then include a file
 				 * called content-search.php and that will be used instead.
 				 */
 				get_template_part( 'template-parts/content', 'search' );
@@ -45,9 +48,13 @@ get_header();
 
 		endif;
 		?>
-
+           
+        </div>
 	</main><!-- #main -->
+        </div>
+        <footer class="footer">
+         <?php get_footer(); ?>
+        </footer>
+    </div>
+	
 
-<?php
-get_sidebar();
-get_footer();

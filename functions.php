@@ -109,7 +109,7 @@ function movies_scripts() {
 
 	wp_style_add_data( 'movies-style', 'rtl', 'replace' );
 
-	wp_enqueue_script( 'scripts', get_template_directory_uri() . '/dist/assets/js/main.min.js', array(), _S_VERSION, true );
+	wp_enqueue_script( 'scripts', get_template_directory_uri() . '/dist/assets/js/main.min.js', array('jquery'), _S_VERSION, true );
 
 	wp_enqueue_script( 'movies-navigation', get_template_directory_uri() . '/js/navigation.js', array(), _S_VERSION, true );
 	
@@ -141,80 +141,8 @@ require get_template_directory() . '/inc/template-functions.php';
 require get_template_directory() . '/inc/customizer.php';
 
 
-/*
-
-add_action( 'init', 'register_post_types' );
-
-function register_post_types(){
-
-	register_post_type( 'movies', [
-		'label'  => 'movies',
-		'labels' => [
-			'name'               => 'фильмы', // основное название для типа записи
-			'singular_name'      => 'фильм', // название для одной записи этого типа
-			'add_new'            => 'Добавить фильм', // для добавления новой записи
-			'add_new_item'       => 'Добавление фильма', // заголовка у вновь создаваемой записи в админ-панели.
-			'edit_item'          => 'Редактирование фильма', // для редактирования типа записи
-			'new_item'           => 'Новый фильм', // текст новой записи
-			'view_item'          => 'Смотреть фильм', // для просмотра записи этого типа.
-			'search_items'       => 'Искать фильм', // для поиска по этим типам записи
-			'not_found'          => 'Не найдено', // если в результате поиска ничего не было найдено
-			'not_found_in_trash' => 'Не найдено в корзине', // если не было найдено в корзине
-			'parent_item_colon'  => '', // для родителей (у древовидных типов)
-			'menu_name'          => 'фильмы', // название меню
-		],
-		'description'            => '',
-		'public'                 => true,
-		'show_in_menu'           => null, // показывать ли в меню админки
-		'show_in_rest'        => null, // добавить в REST API. C WP 4.7
-		'rest_base'           => null, // $post_type. C WP 4.7
-		'menu_position'       => null,
-		'menu_icon'           => null,
-		'hierarchical'        => false,
-		'supports'            => [ 'title', 'editor','thumbnail','excerpt','custom-fields' ], // 'title','editor','author','thumbnail','excerpt','trackbacks','custom-fields','comments','revisions','page-attributes','post-formats'
-		'taxonomies'          => [],
-		'has_archive'         => true,
-		'rewrite'             => true,
-		'query_var'           => true,
-	] );
-
-}
 
 
-add_action( 'init', 'create_taxonomy' );
-function create_taxonomy(){
-
-	register_taxonomy( 'taxonomy', [ 'movies' ], [
-		'label'                 => 'genres', 
-		'labels'                => [
-			'name'              => 'Жанры',
-			'singular_name'     => 'Жанр',
-			'search_items'      => 'Искать жанры',
-			'all_items'         => 'Все жанры',
-			'view_item '        => 'Просмотреть жанры',
-			'parent_item'       => 'Родительский жанр',
-			'parent_item_colon' => 'Родительский жанр:',
-			'edit_item'         => 'Редактировать жанр',
-			'update_item'       => 'Обновить жанр',
-			'add_new_item'      => 'Добавить новый жанр',
-			'new_item_name'     => 'Новый жанр',
-			'menu_name'         => 'Жанр',
-			'back_to_items'     => '← Назад к жанрам',
-		],
-		'description'           => 'Жанры фильмов', // описание таксономии
-		'public'                => true,
-		'hierarchical'          => false,
-		'rewrite'               => true,
-		'capabilities'          => array(),
-		'meta_box_cb'           => true, // html метабокса. callback: `post_categories_meta_box` или `post_tags_meta_box`. false — метабокс отключен.
-		'show_admin_column'     => false, // авто-создание колонки таксы в таблице ассоциированного типа записи. (с версии 3.5)
-		'show_in_rest'          => null, // добавить в REST API
-		'rest_base'             => null, // $taxonomy
-
-	] );
-}
-
-*/
 
 function kama_excerpt( $args = '' ){
 	global $post;
@@ -312,3 +240,169 @@ function kama_excerpt( $args = '' ){
 
 	return $text;
 }
+
+	// include custom jQuery
+	function shapeSpace_include_custom_jquery() {
+		wp_deregister_script('jquery');
+		wp_enqueue_script('jquery', 'https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js', array(), null, true);
+	   }
+	   add_action('wp_enqueue_scripts', 'shapeSpace_include_custom_jquery');
+
+
+
+
+add_action('wp_ajax_myfilter', 'misha_filter_function'); // wp_ajax_{ACTION HERE} 
+add_action('wp_ajax_nopriv_myfilter', 'misha_filter_function');
+
+function misha_filter_function(){
+	$args = array(
+		'post_type'   => 'movies',
+		'order' => 'DESC',
+	);
+ 
+ 
+	// create $args['meta_query'] array if one of the following fields is filled
+	if( isset( $_POST['price_min'] ) && $_POST['price_min'] || isset( $_POST['price_max'] ) && $_POST['price_max'] || isset( $_POST['date_min'] ) && $_POST['date_max'] )
+		$args['meta_query'] = array( 'relation'=>'AND' ); // AND means that all conditions of meta_query should be true
+ 
+	// if both minimum price and maximum price are specified we will use BETWEEN comparison
+	if( isset( $_POST['price_min'] ) && $_POST['price_min'] && isset( $_POST['price_max'] ) && $_POST['price_max'] ) {
+		$args['meta_query'][] = array(
+			"meta_key" => "stoimost",  
+			'value' => array( $_POST['price_min'], $_POST['price_max'] ),
+			'type' => 'numeric',
+			'compare' => 'between'
+		);
+	} else {
+		// if only min price is set
+		if( isset( $_POST['price_min'] ) && $_POST['price_min'] )
+			$args['meta_query'][] = array(
+				'key' => 'stoimost',
+				'value' => $_POST['price_min'],
+				'type' => 'numeric',
+				'compare' => '>='
+			);
+ 
+		// if only max price is set
+		if( isset( $_POST['price_max'] ) && $_POST['price_max'] )
+			$args['meta_query'][] = array(
+				'key' => 'stoimost',
+				'value' => $_POST['price_max'],
+				'type' => 'numeric',
+				'compare' => '<='
+			);
+	}
+
+
+	 if( isset( $_POST['date_min'] ) && $_POST['date_min'] && isset( $_POST['date_max'] ) && $_POST['date_max'] ) {
+		$args['meta_query'][] = array(
+			"meta_key" => "vremya_seansa",  
+			'value' => array( $_POST['date_min'], $_POST['date_max'] ),
+			'type' => 'date',
+			'compare' => 'between'
+		);
+	} else {
+		// if only min date is set
+		if( isset( $_POST['date_min'] ) && $_POST['date_min'] )
+			$args['meta_query'][] = array(
+				'key' => 'vremya_seansa',
+				'value' => $_POST['date_min'],
+				'type' => 'date',
+				'compare' => '>='
+			);
+ 
+		// if only max date is set
+		if( isset( $_POST['date_max'] ) && $_POST['date_max'] )
+			$args['meta_query'][] = array(
+				'key' => 'vremya_seansa',
+				'value' => $_POST['date_max'],
+				'type' => 'date',
+				'compare' => '<='
+			);
+	}
+ // Определяем, по какому параметру нужно сортировать фильмы
+ $sort_by = isset($_POST['sort_by']) ? $_POST['sort_by'] : '';
+ switch ($sort_by) {
+   case 'date_asc':
+	$args['meta_key'] = 'vremya_seansa';
+	$args['orderby'] = 'meta_value_num';
+	 $args['order'] = 'ASC';
+	 break;
+   case 'date_desc':
+	$args['meta_key'] = 'vremya_seansa';
+	$args['orderby'] = 'meta_value_num';
+	 $args['order'] = 'DESC';
+	 break;
+   case 'price_asc':
+	 $args['meta_key'] = 'stoimost';
+	 $args['orderby'] = 'meta_value_num';
+	 $args['order'] = 'ASC' ;
+	 break;
+	 case 'price_desc':
+	 $args['meta_key'] = 'stoimost';
+	 $args['orderby'] = 'meta_value_num';
+	 $args['order'] = 'DESC';
+	 break;
+	 default:
+	 break;
+	 }
+
+// Check if genre filter is set
+if( isset( $_POST['genres'] ) && !empty( $_POST['genres'] ) ) {
+	$args['tax_query'] = array(
+		array(
+			'taxonomy' => 'genre',
+			'terms'    => $_POST['genres'],
+		),
+	);
+}
+ 
+
+$query = new WP_Query( $args );
+	
+if( $query->have_posts() ) :
+    while( $query->have_posts() ): $query->the_post();
+        echo '<div class="catalog__item-card">';
+        $thumbnail_id = get_post_thumbnail_id( get_the_ID() );
+        $alt = get_post_meta($thumbnail_id, '_wp_attachment_image_alt', true);
+		echo '<a href="' . get_permalink() . '">' . get_the_post_thumbnail( get_the_ID(), array(300, 400) ) . '</a>';
+		echo '<h2><a href="' . get_permalink() . '">' . $query->post->post_title . '</a></h2>';
+        echo '<div class="catalog__item-description">' . kama_excerpt( [ 'maxchar'=>100 ] ) . '</div>';
+        $termini = get_the_terms( $post, array('lands') );
+        if ( $termini && ! is_wp_error( $termini ) ) {
+            $termini_massiv = array();
+            foreach ( $termini as $termin ) {
+                // добавление элемента в массив
+                $termini_massiv[] = '<a href="' . get_term_link( $termin ) . '" title="Перейти к ' . esc_attr( $termin->name ) .  '">' . $termin->name . '</a>';
+            }
+            $termini_a_hrefs = join( ", ", $termini_massiv );
+            echo '<div class="catalog__item-title">Страны: <span class="catalog__item-text">' . $termini_a_hrefs . '</span></div>';
+        } 
+        echo '<h3 class="catalog__item-title">Актёры:</h3>';
+        $actors = get_the_terms( get_the_ID(), 'actors' );
+        if ( $actors && ! is_wp_error( $actors ) ) :
+            ?>
+            <ul class="vendors">
+                <?php foreach ( $actors as $actor ) : ?>
+                    <li><a href="<?php echo esc_url( get_term_link( $actor ) ); ?>"><?php echo esc_html( $actor->name ); ?></a></li>
+                <?php endforeach; ?>
+            </ul>
+        <?php endif;
+        echo '<h3 class="catalog__item-title">Дата выхода:</h3>';
+        the_field('vremya_seansa');
+        echo '<h3 class="catalog__item-title">Стоимость:</h3>';
+        echo '<span>';
+        the_field('stoimost');
+        echo 'рублей</span>';
+        echo '</div>';
+    endwhile;
+    wp_reset_postdata();
+else :
+    echo 'Ниччего не найдено';
+endif;
+
+die();
+}
+
+
+
